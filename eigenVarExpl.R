@@ -1,3 +1,8 @@
+library(dplyr)
+library(wgcna)
+library(ggplot)
+library(cowplot)
+
 # test different minModuleSize - choose one with maximum modularity
 sizes=seq(5,100, by=1)
 eig=list()
@@ -61,8 +66,6 @@ eig[[s]]=as.data.frame(t(rbind(round(eig2011[[s]]$varExplained, digits=3), round
 eig=eig[!sapply(eig, is.null)]
 
 save(eig, file="optimize.min.mod.size.eigen.var.RData")
-
-library(dplyr)
 
 eig.df=ldply(eig)
 colnames(eig.df)<-c("y2011", "y2012", "min.module.size")
