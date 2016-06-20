@@ -2,6 +2,7 @@ library(DESeq2)
 library(ggplot2)
 library(plyr)
 library(reshape)
+library(splitstackshape)
 library(phyloseq)
 library(vegan)
 library(cowplot)
@@ -10,12 +11,12 @@ library(vsn)
 library(metagenomeSeq)
 
 # set working directory
-workingDir = ""
-setwd(workingDir)
+workingDir = "/Users/mchafee/Documents/Local_data_for_Rstudio/WGCNA/final/"
+setwd(workingDir); 
 # Load the WGCNA package
 library(WGCNA)
 # The following setting is important, do not omit.
-options(stringsAsFactors = FALSE)
+options(stringsAsFactors = FALSE);
 
 #COGITO data
 # from 2010-2012 (142 samples)
