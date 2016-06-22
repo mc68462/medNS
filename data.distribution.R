@@ -10,17 +10,9 @@ library(dplyr)
 library(vsn)
 library(metagenomeSeq)
 
-# set working directory
-workingDir = ""
-setwd(workingDir); 
-# Load the WGCNA package
-library(WGCNA)
-# The following setting is important, do not omit.
-options(stringsAsFactors = FALSE);
-
 #COGITO data
 # from 2010-2012 (142 samples)
-cogito.otus<-read.table(file=x, sep="\t", header=T, row.names = 1)
+cogito.otus<-read.table(file="/Users/mchafee/Documents/TextFiles/FINAL.2010-12.MED/cogito.fl.2010_2012.med.m100.d1.silva1.3.txt", sep="\t", header=T, row.names = 1)
 
 #massage cogito data, split node and taxonomy
 cogito.otus.taxo<-as.data.frame(stringr::str_split_fixed(rownames(cogito.otus), "_", 2))
@@ -36,7 +28,7 @@ colnames(cogito.otus.taxo)<-c("domain",
 cogito.otus.taxo[is.na(cogito.otus.taxo)]<-NA
 
 #read metadata file 
-cogito.sample.metadata<-read.table(file=x , sep="\t", header=T, row.names=1)
+cogito.sample.metadata<-read.table(file="/Users/mchafee/Documents/TextFiles/FINAL.2010-12.MED/FL.metadata.2010-12.FINAL.txt" , sep="\t", header=T, row.names=1)
 sample_name=rownames(cogito.sample.metadata)
 cogito.sample.metadata=cbind(sample_name, cogito.sample.metadata)
 # merge all into physeq object
@@ -53,10 +45,6 @@ cogito.physeq<-cogito.physeq.no.chloro.mito.norel
 #Split data set by year
 cogito.physeq.2011<-subset_samples(cogito.physeq, year=="2011")
 cogito.physeq.2012<-subset_samples(cogito.physeq, year=="2012")
-
-# remove OTU rows that sum to 0
-#cogito.physeq.2011.filt=filter_taxa(cogito.physeq.2011, function(x) sum(x)>0, prune=T)
-#cogito.physeq.2012.filt=filter_taxa(cogito.physeq.2012, function(x) sum(x)>0, prune=T)
 
 # Look sparsity
 pdf("count.distribution.sum.counts.vs.max.in.sample.pdf", height=5, width=10)
@@ -152,16 +140,21 @@ pdf("prevalence.pdf", height=5, width=10)
 plot_grid(p1, p2)
 dev.off()
 
-# Filter OTUs based on prevalence - 10% cutoff
-cogito_physeq_2011_prevalence_filt <- cogito_physeq_2011_prevalence %>% 
+# Remove taxa not seen more than 2 times in at least 10% of the samples.
+#cogito.physeq.2011.filt <- filter_taxa(cogito.physeq.2011, function(x) sum(x > 2) > (0.1*length(x)), prune=TRUE)
+#cogito.physeq.2012.filt <- filter_taxa(cogito.physeq.2012, function(x) sum(x > 2) > (0.1*length(x)), prune=TRUE)
+
+# Remove OTUs with < 10% Prevalence
+cogito_physeq_2011_prevalence_filt <- cogito_physeq_2011_prevalence %>%
   filter(prev >= cogito_physeq_2011_n_samples * 0.1)
 summary(cogito_physeq_2011_prevalence_filt$prev)
 cogito_physeq_2011_otu_sample_physeq_filt_prev <- prune_taxa(cogito_physeq_2011_prevalence_filt %>% .$otu_name %>% as.vector %>% as.character, cogito.physeq.2011)
 
-cogito_physeq_2012_prevalence_filt <- cogito_physeq_2012_prevalence %>% 
+cogito_physeq_2012_prevalence_filt <- cogito_physeq_2012_prevalence %>%
   filter(prev >= cogito_physeq_2012_n_samples * 0.1)
 summary(cogito_physeq_2012_prevalence_filt$prev)
 cogito_physeq_2012_otu_sample_physeq_filt_prev <- prune_taxa(cogito_physeq_2012_prevalence_filt %>% .$otu_name %>% as.vector %>% as.character, cogito.physeq.2012)
+
 
 # Plot heteroscedasticity
 # larger average expression have on average larger observed variances across samples
@@ -170,11 +163,28 @@ cogito_physeq_2012_otu_sample_physeq_filt_prev <- prune_taxa(cogito_physeq_2012_
 filt2011=t(as.matrix(as.data.frame(otu_table(cogito_physeq_2011_otu_sample_physeq_filt_prev))))
 filt2012=t(as.matrix(as.data.frame(otu_table(cogito_physeq_2012_otu_sample_physeq_filt_prev))))
 
-# Log Hellinger
+# No transformation - only sample-wise normaliztiaon - rows are samples
+norm2011=decostand(filt2011, method="total", MARGIN=1)
+norm2012=decostand(filt2012, method="total", MARGIN=1)
+# rowSums should equal 1
+rowSums(norm2011)
+rowSums(norm2012)
+
+# Log and Hellinger transformations - decostand 'hellinger' incorporates 'total' sample-wise normalization
 # decostand tranformations : 
 # All methods have a default margin. MARGIN=1 means rows (sites in a normal data set) and MARGIN=2 means columns (species in a normal data set).
-hellog2011 <- decostand(log(filt2011 + 1), method="hellinger", MARGIN=1)
-hellog2012 <- decostand(log(filt2012 + 1), method="hellinger", MARGIN=1)
+
+# Hellinger only
+hell2011 <- decostand(filt2011, method="hellinger", MARGIN=1)
+hell2012 <- decostand(filt2012, method="hellinger", MARGIN=1)
+
+# Log + 1 > Hellinger transformation of log scaled abundance as in Guidi et al. 2016 - log first, then Hellinger
+hellog2011 <- decostand(log(filt2011 + 1 ), method="hellinger", MARGIN=1)
+hellog2012 <- decostand(log(filt2012 + 1 ), method="hellinger", MARGIN=1)
+
+# Sample-wise normalization + 1, then log2
+log2011 <- log2(norm2011 + 1)
+log2012 <- log2(norm2012 + 1)
 
 # Variance stabilization
 gm_mean <- function(x, na.rm=TRUE){
@@ -201,12 +211,19 @@ vstMat2012[vstMat2012 < 0] <- 0
 
 # meanSDplot: Standard deviation and mean are calculated row-wise from the expression matrix (in) x. 
 pdf("transformation.comparison.pdf", height=10, width=15)
-par(mfrow=c(2,3))
-meanSdPlot(t(filt2011),main="Raw counts - 2011", ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(t(hellog2011),main="Hellinger of log(counts) + 1 - 2011", ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(vstMat2011, main="VST - 2011", ylab = "SD", xlab="Rank(mean)")
+par(mfrow=c(2,6))
+meanSdPlot(t(filt2011),main="2011 counts", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(norm2011),main="2011 normalized", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(log2011),main="2011 normalized, log2 + 1", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(hell2011),main="2011 Hellinger", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(hellog2011),main="2011 Hellinger, log + 1", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(vstMat2011, main="2011 VST", ylab = "SD", xlab="Rank(mean)")
 
-meanSdPlot(t(filt2012),main="Raw counts - 2011", ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(t(hellog2012),main="Hellinger of log(counts) + 1 - 2011", ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(vstMat2012, main="VST - 2011", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(filt2011),main="2012 counts", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(norm2012),main="2012 normalized", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(log2012),main="2012 normalized, log2 + 1", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(hell2012),main="2012 Hellinger", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(t(hellog2012),main="2012 Hellinger, log + 1", ylab = "SD", xlab="Rank(mean)")
+meanSdPlot(vstMat2012, main="2012 VST", ylab = "SD", xlab="Rank(mean)")
+
 dev.off()
