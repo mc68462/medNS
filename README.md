@@ -36,7 +36,7 @@ sample metadata: TableS4.sample.metadata.txt
 ```
 - calculate module preservation using Zsummary statistic and medianRank (Figure S9)
 ```
-### OTU abundance barplots using taxplot_grep in taxplot.function.R
+### OTU abundance barplots using taxplot_grep in taxplot.functions.R
 ```
 - the taxplot_grep function uses a basic grep search to plot the abundance of OTUs and taxonomic paths of 
    interest across 2010-2012
