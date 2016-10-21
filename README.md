@@ -1,4 +1,4 @@
-### Identification of consensus modules between two OTU datsets using R package WGCNA
+### Identification of consensus modules between two OTU datsets using R package WGCNA (Langfelder & Horvath *BMC Bioinformatics* 2008)
 
 #### Input files: an OTU count matrix and sample metadata file
 
