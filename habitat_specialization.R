@@ -9,7 +9,6 @@ OTU.table.all <- OTU_table
 
 # Occupancy???abundance relationship (Endemism-cosmopolitanism)
 # Example from http://ecology.msu.montana.edu/labdsv/R/labs/lab1/lab1.html
-library(ggplot2)
 
 # set min abundance for count calculations (use all for plotting)
 minabu <- 500
@@ -34,7 +33,6 @@ if (minabu == 0) {
   }
 }
 mean.abu[is.na(mean.abu)] <- 0
-
 
 b<-as.data.frame(cbind(site.otu.prev[mean.abu > minabu], mean.abu[mean.abu > minabu]))
 colnames(b)<-c("counts", "mean")
