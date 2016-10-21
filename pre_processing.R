@@ -10,7 +10,7 @@ library(vegan)
 
 #COGITO data
 # from 2010-2012 (142 samples)
-cogito.otus<-read.table(file="Table_S3.OTU_matrix.txt", sep="\t", header=T, row.names = 1)
+cogito.otus<-read.table(file="data/Table_S3.OTU_matrix.txt", sep="\t", header=T, row.names = 1)
 
 #massage cogito data, split node and taxonomy
 cogito.otus.taxo<-as.data.frame(stringr::str_split_fixed(rownames(cogito.otus), "_", 2))
@@ -26,7 +26,7 @@ colnames(cogito.otus.taxo)<-c("domain",
 cogito.otus.taxo[is.na(cogito.otus.taxo)]<-NA
 
 #read metadata file 
-cogito.sample.metadata<-read.table(file="TableS4.sample.metadata.txt" , sep="\t", header=T, row.names=1)
+cogito.sample.metadata<-read.table(file="data/TableS4.sample.metadata.txt" , sep="\t", header=T, row.names=1)
 sample_name=rownames(cogito.sample.metadata)
 cogito.sample.metadata=cbind(sample_name, cogito.sample.metadata)
 # merge all into physeq object
