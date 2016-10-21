@@ -61,8 +61,6 @@ dev.off()
 #Return generalist & specialsits oligotypes
 generalists <- rownames(b)[b$counts >= 0.75 & b$mean >= minabu]
 generalists
-write.table(generalists, file="~/Documents/Local_data_for_Rstudio/medMS/generalists.txt")
 
 specialists <- rownames(b)[b$counts <= 0.1  & b$counts > 0.001 & b$mean >= minabu]
 specialists
-write.table(specialists, file="~/Documents/Local_data_for_Rstudio/medMS/specialists.txt")
