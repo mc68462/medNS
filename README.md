@@ -52,7 +52,7 @@ sample metadata: TableS4.sample.metadata.txt
    name = c("short", "long") [short = otuID only, long = otuID + lowest taxnomic level]
    position = c("stack", "fill") [stack = % total abundance, fill = scale abundance to 100%] 
  ```
-#### Examples - taxa should be formatted according to taxonomy.txt for successful grep search
+#### Examples - taxa should be formatted according to data/taxonomy.txt for successful grep search
 
 ##### Class search: 
 ```
