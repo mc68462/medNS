@@ -11,16 +11,16 @@ library(gplots)
 library(WGCNA)
 
 # set working directory
-workingDir <- "/Users/mchafee/Documents/Local_data_for_Rstudio/WGCNA/github/"
+workingDir <- ""
 setwd(workingDir); 
 
 # set data directories to variables
-meta <- "/Users/mchafee/Desktop/data/TableS4.sample.metadata.txt"
+meta <- "data/TableS4.sample.metadata.txt"
 
 # the following setting is important, do not omit.
 options(stringsAsFactors = FALSE);
 
-# take filtered phyloseq objects from OTU.pre_processing.R
+# take filtered phyloseq objects cogito_physeq_2011_otu_sample_physeq_filt_prev and cogito_physeq_2012_otu_sample_physeq_filt_prev from OTU.pre_processing.R
 cogito.physeq.2011.filt <- cogito_physeq_2011_otu_sample_physeq_filt_prev
 cogito.physeq.2012.filt <- cogito_physeq_2012_otu_sample_physeq_filt_prev
 save(cogito.physeq.2011.filt, cogito.physeq.2012.filt, file="filtered.cogito.data.Rata")
