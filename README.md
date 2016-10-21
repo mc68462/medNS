@@ -1,4 +1,4 @@
-### Identification of consensus modules between two OTU datsets using R package WGCNA (Langfelder & Horvath *BMC Bioinformatics* 2008)
+### Identification of consensus modules between two OTU datsets using R package WGCNA
 
 #### Input files: an OTU count matrix and sample metadata file
 
@@ -16,7 +16,7 @@ sample metadata: TableS4.sample.metadata.txt
 - Evaluate transformation of OTU matrix - Hellinger transformation of log scaled abundance (+ pseudocount 1)
 ```
 
-##### wgcna.R
+##### wgcna.R (Langfelder & Horvath *BMC Bioinformatics* 2008)
 ```
 - Import filtered data from phyloseq object generated in OTU.pre_processing.R
 - Collect basic abundance measures of OTUs (mean, geometric mean, maximum observed abundance)
