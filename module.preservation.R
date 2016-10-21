@@ -1,6 +1,7 @@
 ### Module Preservation
 library(scales)
 
+# first run wgcna.R to obtain data for 2011 and 2012 formatted into a list structure (multiExpr)
 # use same softPower as in wgcna.R to calculate adjacency matrices, which are generated during blockwiseConsensusModules but not saved
 softPower = 15;
 # initialize an appropriate array to hold the adjacencies
