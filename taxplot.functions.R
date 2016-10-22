@@ -45,7 +45,7 @@ taxplot_grep <- function(otu_matrix, sample_data, taxa, main, abund, position=c(
     theme_bw() %+replace% theme(panel.background=element_rect(fill=NA)) +               
     theme(legend.position=legend) +
     ggtitle(main) +
-    guides(fill=guide_legend(keywidth = 1, keyheight = 1, override.aes=list(colour=NULL), title="Oligotypes")) +  
+    guides(fill=guide_legend(keywidth = 1, keyheight = 1, override.aes=list(colour=NULL), title="Oligotype")) +  
     theme(plot.title = element_text(size=12,family="Helvetica", face="italic")) +
     theme(legend.text=element_text(size=10,family="Helvetica", face="plain")) +               
     theme(legend.title = element_text(size=12,family="Helvetica", face="plain")) +
@@ -116,7 +116,7 @@ taxplot_subnets <- function(otu_matrix, sample_data, taxa, Year, main, n, abund,
     theme_bw() %+replace% theme(panel.background=element_rect(fill=NA)) +               
     theme(legend.position=legend) +
     ggtitle(paste(main, Year)) +
-    guides(fill=guide_legend(keywidth = 1, keyheight = 1, override.aes=list(colour=NULL), title="Oligotypes")) +  
+    guides(fill=guide_legend(keywidth = 1, keyheight = 1, override.aes=list(colour=NULL), title="Oligotype")) +  
     theme(plot.title = element_text(size=16,family="Helvetica", face="plain")) +
     theme(legend.text=element_text(size=11,family="Helvetica", face="plain")) +               
     theme(legend.title = element_text(size=11,family="Helvetica", face="plain")) +
