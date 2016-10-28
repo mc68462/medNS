@@ -56,7 +56,7 @@ sample metadata: TableS4.sample.metadata.txt
 
 ##### Class search: 
 ```
-taxplot_grep(otu_matrix="TableS3.OTU_matrix.txt", sample_data="TableS4.sample.metadata.txt", 
+taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4.sample.metadata.txt", 
    main = "Alphaproteobacteria", abund = 0.05, taxa = "Alphaproteobacteria", legend = "right", name="long", 
    position="stack")
   ```
@@ -64,7 +64,7 @@ taxplot_grep(otu_matrix="TableS3.OTU_matrix.txt", sample_data="TableS4.sample.me
   
 ##### Genera search: 
 ```
-taxplot_grep(otu_matrix="TableS3.OTU_matrix.txt", sample_data="TableS4.sample.metadata.txt", 
+taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4.sample.metadata.txt", 
    main = "Polaribacter", abund = 0.05, taxa = "Polaribacter", legend = "bottom", name="short", 
    position="stack")
 ```
@@ -72,7 +72,7 @@ taxplot_grep(otu_matrix="TableS3.OTU_matrix.txt", sample_data="TableS4.sample.me
 
 ##### OTU search: 
 ```
-taxplot_grep(otu_matrix="TableS3.OTU_matrix.txt", sample_data="TableS4.sample.metadata.txt", main = "BD1_7 clade", 
+taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4.sample.metadata.txt", main = "BD1_7 clade", 
    abund = 0.0, taxa = "^11259_", legend = "bottom", name="short", position="stack")
 ```
  ![alt text](https://github.com/genomewalker/medNS/blob/master/plot_examples/BD1_7_clade.png)
