@@ -345,18 +345,18 @@ for (set in sets){
 
 #### generate barplots of OTUs within each consensus modules
 # determine classification of modules according to consensus module-trait correlations
-autumn.winter=c("ME11", "ME2","ME3", "ME20", "ME12", "ME21", "ME14", "ME1", "ME15")
-early.bloom=c("ME10", "ME16")
-spring.bloom=c("ME7", "ME19", "ME13", "ME25", "ME9", "ME17", "ME8", "ME22")
-summer.bloom=c("ME5", "ME24", "ME18", "ME6")
-late.bloom=c("ME23", "ME4")
+autumn-winter=c("ME11", "ME2","ME3", "ME20", "ME12", "ME21", "ME14", "ME1", "ME15")
+early-bloom=c("ME10", "ME16")
+spring-bloom=c("ME7", "ME19", "ME13", "ME25", "ME9", "ME17", "ME8", "ME22")
+summer-bloom=c("ME5", "ME24", "ME18", "ME6")
+late-bloom=c("ME23", "ME4")
 no.module=c("ME0")
 # place module classifications into a dataframe
 df.trait <- data.frame(module=as.character(c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25)), 
-                       trait_cor=c("no.module","autumn.winter","autumn.winter","autumn.winter","late.bloom", "summer.bloom", "summer.bloom",
-                                   "spring.bloom", "spring.bloom", "spring.bloom", "early.bloom", "autumn.winter", "autumn.winter",
-                                   "spring.bloom", "autumn.winter", "autumn.winter", "early.bloom", "spring.bloom", "summer.bloom",
-                                   "spring.bloom", "autumn.winter", "autumn.winter", "spring.bloom", "late.bloom", "summer.bloom", "spring.bloom"))
+                       trait_cor=c("no.module","autumn-winter","autumn-winter","autumn-winter","late-bloom", "summer-bloom", "summer-bloom",
+                                   "spring-bloom", "spring-bloom", "spring-bloom", "early-bloom", "autumn-winter", "autumn-winter",
+                                   "spring-bloom", "autumn-winter", "autumn-winter", "early-bloom", "spring-bloom", "summer-bloom",
+                                   "spring-bloom", "autumn-winter", "autumn-winter", "spring-bloom", "late-bloom", "summer-bloom", "spring-bloom"))
 # first generate a table of OTU attributes (i.e., taxonomy, abundances)
 tax=as.data.frame(tax_table(cogito.physeq))
 cols=c("domain", "phylum", "class", "order", "family", "genus")
@@ -414,7 +414,7 @@ tdf=data.frame(module=module, OTU_freq=OTU_freq$`length(node)`,
                gmean_OTU_abund=gmean_OTU_abund, 
                trait_cor=TC$trait_cor) #[-1,]
 tdf$module <- factor(tdf$module, levels = as.numeric(tdf$module))
-tdf$trait_cor <- factor(tdf$trait_cor, levels = c("autumn.winter","early.bloom", "spring.bloom","summer.bloom", "late.bloom", "no.module"))
+tdf$trait_cor <- factor(tdf$trait_cor, levels = c("autumn-winter","early-bloom", "spring-bloom","summer-bloom", "late-bloom", "no.module"))
 
 # extract module membership for each OTU
 lmod=dlply(nodeData, c("module"), function(x) x=x)
@@ -424,11 +424,11 @@ lmod.df=data.frame(module=ldply(names(lmod), function(x) paste("ME",unique(lmod[
 lgrep=lapply(lmod, function(x) gsub("(\\|$)", "", capture.output(cat(gsub("(.*)", "^\\1_|", (x$node)), sep=''))))
 names(lgrep)<-lmod.df$V1
 
-# SELECT one megamodule (i.e., autumn.winter, early.bloom, spring.bloom, summer.bloom, late.bloom, no.module) at a time for plotting of 2011 and 2012 - change 'm' and 'mod' with desired module- run until dev.off()
+# SELECT one megamodule (i.e., autumn-winter, early-bloom, spring-bloom, summer-bloom, late-bloom, no.module) at a time for plotting of 2011 and 2012 - change 'm' and 'mod' with desired module- run until dev.off()
 # requires loading taxplot.functions.R for taxplot_subsets script
 # e.g.
-m="autumn.winter"
-mod=autumn.winter
+m="autumn-winter"
+mod=autumn-winter
 
 pdf(paste(m, ".otu.abund.2011-12.n10.pdf", sep=''), height=8, width=10*length(mod))
 p2011=list()
@@ -450,4 +450,3 @@ p2012=lapply(
 )
 do.call(grid.arrange, c(p2011, p2012, nrow=2))
 dev.off()
-
