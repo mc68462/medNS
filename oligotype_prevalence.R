@@ -7,7 +7,7 @@ dim(OTU_table)
 
 OTU.table.all <- OTU_table
 
-# Endemism vs cosmopolitanism (Barberán et al, 2012)
+# Endemism vs cosmopolitanism
 library(ggplot2)
 
 # set min abundance for count calculations (use all for plotting)
@@ -47,7 +47,7 @@ base_breaks <- function(n = 10){
   }
 }
 
-pdf("habitat.specialization.pdf", height=6, width=7)
+pdf("oligotype_prevalence.pdf", height=6, width=7)
 ggplot(data=b) +
   geom_point(aes(counts, mean, colour=com)) +
   xlab("% Sample prevalence") +
@@ -62,8 +62,6 @@ dev.off()
 #Return generalist & specialsits oligotypes
 generalists <- rownames(b)[b$counts >= 0.75 & b$mean >= minabu]
 generalists
-write.table(generalists, file="~/Documents/Local_data_for_Rstudio/medMS/generalists.txt")
 
 specialists <- rownames(b)[b$counts <= 0.1  & b$counts >= minabu]
 specialists
-write.table(specialists, file="~/Documents/Local_data_for_Rstudio/medMS/specialists.txt")
