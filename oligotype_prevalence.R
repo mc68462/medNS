@@ -1,14 +1,13 @@
 library(ggplot2)
 
 #import OTU matrix
-df=read.table("/Users/mchafee/Documents/TextFiles/FINAL.2010-12.MED/cogito.fl.2010_2012.med.m100.d1.silva1.3.txt", header=TRUE, row.names='nodes', sep='\t')
+df=read.table("data/Table_S3.OTU_matrix.txt", header=TRUE, row.names='nodes', sep='\t')
 OTU_table=df[rownames(df)[grep("Chloroplast|Mitochondria|NoRelative", rownames(df), ignore.case=TRUE, invert=TRUE)],]
 dim(OTU_table)
 
 OTU.table.all <- OTU_table
 
-# Occupancy???abundance relationship (Endemism-cosmopolitanism)
-# Example from http://ecology.msu.montana.edu/labdsv/R/labs/lab1/lab1.html
+# Endemism vs cosmopolitanism (Barberán et al, 2012)
 library(ggplot2)
 
 # set min abundance for count calculations (use all for plotting)
