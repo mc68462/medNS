@@ -10,17 +10,18 @@ library(gridExtra)
 library(gplots)
 library(WGCNA)
 
+# run WGCNA pipeline - first run pre_processing.R to generate filtered phyloseq objects
 # set working directory
-workingDir <- ""
+workingDir <- "."
 setwd(workingDir); 
 
-# set data directories to variables
+# load sample metadata
 meta <- "data/TableS4.sample.metadata.txt"
 
 # the following setting is important, do not omit.
 options(stringsAsFactors = FALSE);
 
-# take filtered phyloseq objects cogito_physeq_2011_otu_sample_physeq_filt_prev and cogito_physeq_2012_otu_sample_physeq_filt_prev from OTU.pre_processing.R
+# load filtered phyloseq objects cogito_physeq_2011_otu_sample_physeq_filt_prev and cogito_physeq_2012_otu_sample_physeq_filt_prev from OTU.pre_processing.R
 cogito.physeq.2011.filt <- cogito_physeq_2011_otu_sample_physeq_filt_prev
 cogito.physeq.2012.filt <- cogito_physeq_2012_otu_sample_physeq_filt_prev
 save(cogito.physeq.2011.filt, cogito.physeq.2012.filt, file="filtered.cogito.data.Rata")
@@ -97,7 +98,7 @@ multiExpr[[2]] <- list(data = as.data.frame(commonOTUs2012.trans));
 names(multiExpr[[2]]$data) <- colnames(commonOTUs2012.trans);
 rownames(multiExpr[[2]]$data) <- rownames(commonOTUs2012.trans);
 
-# check that the data has the correct format for many functions operating on multiple sets
+# check that the data has the correct format for many WGCNA functions operating on multiple sets
 exprSize <- checkSets(multiExpr)
 
 # load sample metadata
@@ -153,11 +154,9 @@ for (set in 1:nSets)
                                                      verbose = 2)[[2]]);
 collectGarbage();
 
-# Plot mean connectivity and power
+# Plot soft power thresholds - choose a threshold R2 >= 0.8
 power.df=data.frame(powerTables[[1]]$data[,1],powerTables[[1]]$data[,2], powerTables[[2]]$data[,2])
 colnames(power.df)<- c("power", "y2011", "y2012")
-mean.df=data.frame(powerTables[[1]]$data[,1],powerTables[[1]]$data[,5], powerTables[[2]]$data[,5])
-colnames(mean.df)<- c("power", "y2011", "y2012")
 
 mpower=melt(power.df, id.vars="power")
 sft=ggplot(mpower, aes(x = power, y = value, group=variable, colour=variable)) + 
@@ -168,20 +167,12 @@ sft=ggplot(mpower, aes(x = power, y = value, group=variable, colour=variable)) +
   geom_hline(yintercept=0.8, linetype='solid', color='#969696', size=0.35) +
   geom_vline(xintercept=15, linetype='solid', color='#969696', size=0.35) +
   labs(color = "Year")
-mmean=melt(mean.df, id.vars="power")
-mean=ggplot(mmean, aes(x = power, y = value, group=variable, colour=variable)) + 
-  geom_line(size=0.5) + 
-  geom_point(size=1) +
-  ylab("Mean connectivity") +
-  xlab("Power") +
-  labs(color = "Year")
-
-p=plot_grid(sft, mean, labels=c("A", "B"), ncol = 2, nrow = 1)
+p=plot_grid(sft, ncol = 1, nrow = 1)
 save_plot("scale.free.topology.power.table.pdf", p, ncol = 1, nrow = 1, base_height = 4,
           base_aspect_ratio = 2.4)
 
 # run auto pipeline for detection of consensus modules 
-# use a softPower that achieves a scale free-topology from above plot (i.e., R2 > 0.8) and minimum module size 10
+# use a softPower that achieves a scale free-topology from above plot (i.e., R2 >= 0.8) and minimum module size 10
 softPower=15
 minModule=10
 
@@ -215,7 +206,7 @@ consMEs = net$multiMEs
 
 save(consMEs, moduleColors, merge, moduleLabels, file=paste("soft_power.",softPower,"min_module_size.", minModule,"EigenCons.RData", sep=''))
 
-# examine variance explained by eigenvector (PC1)
+# plot variance explained by eigenvector (PC1)
 eig2011=moduleEigengenes(multiExpr[[1]]$data, 
                          net$colors, 
                          impute = TRUE, 
@@ -299,7 +290,7 @@ colnames(consensusCor)=colnames(moduleTraitCor[[1]])
 consensusCor=consensusCor[substring(rownames(moduleTraitCor[[1]]), 3) != 0,]
 
 # plot consensus correlations from 2011 and 2012 (consensus positive in red, consensus negative in blue, no consensus between years in black)
-pdf("Consensus.trait.env.plot.auto.wardD2.pdf", height=15, width=20)
+pdf("Consensus.trait.env.plot.eucl.wardD2.pdf", height=15, width=20)
 heatmap.2(consensusCor,
           hclustfun = function(x) hclust(x, method = 'ward.D2'), 
           distfun = function(x) dist(x,method = 'euclidean'),
@@ -344,16 +335,18 @@ for (set in sets){
 }
 
 #### generate barplots of OTUs within each consensus modules
-# determine classification of modules according to consensus module-trait correlations
-autumn-winter=c("ME11", "ME2","ME3", "ME20", "ME12", "ME21", "ME14", "ME1", "ME15")
-early-bloom=c("ME10", "ME16")
-spring-bloom=c("ME7", "ME19", "ME13", "ME25", "ME9", "ME17", "ME8", "ME22")
-summer-bloom=c("ME5", "ME24", "ME18", "ME6")
-late-bloom=c("ME23", "ME4")
+# determine classification of modules according to consensus module-trait correlation clustering patterns (from heatmap)
+autumn.winter=c("ME11", "ME2","ME3", "ME20", "ME12", "ME21", "ME14", "ME1", "ME15")
+early.bloom=c("ME10", "ME16")
+spring.bloom=c("ME7", "ME19", "ME13", "ME25", "ME9", "ME17", "ME8", "ME22")
+summer.bloom=c("ME5", "ME24", "ME18", "ME6")
+late.bloom=c("ME23", "ME4")
 no.module=c("ME0")
+            
+# create some data frames of node and module attributes for plotting            
 # place module classifications into a dataframe
 df.trait <- data.frame(module=as.character(c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25)), 
-                       trait_cor=c("no.module","autumn-winter","autumn-winter","autumn-winter","late-bloom", "summer-bloom", "summer-bloom",
+                       trait_cor=c("no-module","autumn-winter","autumn-winter","autumn-winter","late-bloom", "summer-bloom", "summer-bloom",
                                    "spring-bloom", "spring-bloom", "spring-bloom", "early-bloom", "autumn-winter", "autumn-winter",
                                    "spring-bloom", "autumn-winter", "autumn-winter", "early-bloom", "spring-bloom", "summer-bloom",
                                    "spring-bloom", "autumn-winter", "autumn-winter", "spring-bloom", "late-bloom", "summer-bloom", "spring-bloom"))
@@ -379,8 +372,8 @@ nd <- data.frame(node = colnames(multiExpr[[1]]$data),
                  gmean.2012 = commonOTUs2012.gmean,
                  max.2011 = commonOTUs2011.max,
                  max.2012 = commonOTUs2012.max)
-megamodule <- df.trait$trait_cor[match(nd$module, df.trait$module)]
-nodeData <- cbind(nd, megamodule)
+mega.module <- df.trait$trait_cor[match(nd$module, df.trait$module)]
+nodeData <- cbind(nd, mega-module)
 nodeData <- nodeData[order(as.numeric(nodeData$module)),]
 
 # agglomerate OTU data (i.e., abundances) across each module for plotting
@@ -424,11 +417,13 @@ lmod.df=data.frame(module=ldply(names(lmod), function(x) paste("ME",unique(lmod[
 lgrep=lapply(lmod, function(x) gsub("(\\|$)", "", capture.output(cat(gsub("(.*)", "^\\1_|", (x$node)), sep=''))))
 names(lgrep)<-lmod.df$V1
 
-# SELECT one megamodule (i.e., autumn-winter, early-bloom, spring-bloom, summer-bloom, late-bloom, no.module) at a time for plotting of 2011 and 2012 - change 'm' and 'mod' with desired module- run until dev.off()
+# Plotting script generates bar plots of mega-modules from Figures S5-S9
+# SELECT one mega-module (i.e., autumn.winter, early.bloom, spring.bloom, summer.bloom, late.bloom, no.module) at a time for plotting of 2011 and 2012 - change 'm' and 'mod' with desired module- run until dev.off()
 # requires loading taxplot.functions.R for taxplot_subsets script
-# e.g.
-m="autumn-winter"
-mod=autumn-winter
+
+# e.g.for autumn-winter - change 'm' and 'mod' for other modules types
+m="autumn.winter"
+mod=autumn.winter
 
 pdf(paste(m, ".otu.abund.2011-12.n10.pdf", sep=''), height=8, width=10*length(mod))
 p2011=list()
