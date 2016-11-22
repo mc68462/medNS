@@ -8,7 +8,7 @@ sample metadata: TableS4.sample.metadata.txt
 
 #### Workflow
 
-##### OTU.pre_processing.R 
+##### pre_processing.R 
 ```
 - Construct phyloseq object
 - Calculate OTU singletons, doubletons and sample prevalence
@@ -25,23 +25,22 @@ sample metadata: TableS4.sample.metadata.txt
 - Run WGCNA 
 - identify optimal softPower to achieve a scale free topology (scale free toplogy model fit R squared > 0.8)
    - run blockwiseConsensusModules
-   - examine variance explained by eigenvector (PC1)
    - find correlations and consensus correlations of module eigengenes and sample environmental metadata (Figure 5)
    - identify 'megamodules' accoriding to hierarchical clustering patterns
    - assign module, megamodule, taxonomic and abundance data to each OTU in a dataframe
    - plot OTU barblots within each megamodule using taxplot_subnets (Figures 6, 7, S3-S7)
 ```
 
-##### module.preservation.R
+##### module_preservation.R
 ```
 - calculate module preservation using Zsummary statistic and medianRank (Figure S9)
 ```
-### OTU abundance barplots using taxplot_grep in taxplot.functions.R
+### OTU abundance barplots using taxplot_grep in taxplot_functions.R
 ```
 - the taxplot_grep function uses a basic grep search to plot the abundance of OTUs and taxonomic paths of 
    interest across 2010-2012
 
-- source(taxplot.function.R)
+- source(taxplot_function.R)
   usage: 
    otu_matrix = path to OTU table [TableS3.OTU_matrix.txt]
    sample_data = path to metadata table [TableS4.sample.metadata.txt]
