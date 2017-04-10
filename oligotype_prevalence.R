@@ -60,8 +60,6 @@ ggplot(data=b) +
 dev.off()
 
 #Return generalist & specialsits oligotypes
-generalists <- rownames(b)[b$counts >= 0.75 & b$mean >= minabu]
-generalists
+broad <- rownames(b)[b$counts >= 0.75 & b$mean >= minabu]
 
-specialists <- rownames(b)[b$counts <= 0.1  & b$counts >= minabu]
-specialists
+narrow <- rownames(b)[b$counts <= 0.1  & b$counts >= minabu]
