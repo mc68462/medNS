@@ -7,9 +7,6 @@ dim(OTU_table)
 
 OTU.table.all <- OTU_table
 
-# Endemism vs cosmopolitanism
-library(ggplot2)
-
 # set min abundance for count calculations (use all for plotting)
 minabu <- 500
 otus <- t(OTU.table.all)
