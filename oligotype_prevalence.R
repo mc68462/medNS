@@ -1,7 +1,7 @@
 library(ggplot2)
 
 #import OTU matrix
-df=read.table("data/Table_S3.OTU_matrix.txt", header=TRUE, row.names='nodes', sep='\t')
+df=read.table("data/TableS4.txt", header=TRUE, row.names='nodes', sep='\t')
 OTU_table=df[rownames(df)[grep("Chloroplast|Mitochondria|NoRelative", rownames(df), ignore.case=TRUE, invert=TRUE)],]
 dim(OTU_table)
 
