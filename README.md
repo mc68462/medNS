@@ -2,9 +2,9 @@
 
 #### Input files: an OTU count matrix and sample metadata file
 
-otu matrix: TableS3.OTU_matrix.txt
+otu matrix: TableS4.txt
 
-sample metadata: TableS4.sample.metadata.txt
+sample metadata: TableS4.metadata.txt
 
 #### Workflow
 
