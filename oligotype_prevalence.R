@@ -59,7 +59,7 @@ ggplot(data=b) +
   theme_bw()
 dev.off()
 
-#Return generalist & specialsits oligotypes
+#Return broad & narrow oligotypes
 broad <- rownames(b)[b$counts >= 0.75 & b$mean >= minabu]
 
 narrow <- rownames(b)[b$counts <= 0.1  & b$mean >= minabu]
