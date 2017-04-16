@@ -42,8 +42,8 @@ sample metadata: TableS4.metadata.txt
 
 - source(taxplot_function.R)
   usage: 
-   otu_matrix = path to OTU table [TableS3.OTU_matrix.txt]
-   sample_data = path to metadata table [TableS4.sample.metadata.txt]
+   otu_matrix = path to OTU table [TableS4.txt]
+   sample_data = path to metadata table [TableS4.metadata.txt]
    main = title 
    abund = minimum observed abundance in at least 1 sample
    taxa = taxonomic grep search - search feature must match a portion of the taxonomic path as in tax.txt 
@@ -55,7 +55,7 @@ sample metadata: TableS4.metadata.txt
 
 ##### Class search: 
 ```
-taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4.sample.metadata.txt", 
+taxplot_grep(otu_matrix="data/TableS4.txt", sample_data="data/TableS4.metadata.txt", 
    main = "Alphaproteobacteria", abund = 0.05, taxa = "Alphaproteobacteria", legend = "right", name="long", 
    position="stack")
   ```
@@ -63,7 +63,7 @@ taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4
   
 ##### Genera search: 
 ```
-taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4.sample.metadata.txt", 
+taxplot_grep(otu_matrix="data/TableS4.txt", sample_data="data/TableS4.metadata.txt", 
    main = "Polaribacter", abund = 0.05, taxa = "Polaribacter", legend = "bottom", name="short", 
    position="stack")
 ```
@@ -71,7 +71,7 @@ taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4
 
 ##### OTU search: 
 ```
-taxplot_grep(otu_matrix="data/TableS3.OTU_matrix.txt", sample_data="data/TableS4.sample.metadata.txt", main = "BD1_7 clade", 
+taxplot_grep(otu_matrix="data/TableS4.txt", sample_data="data/TableS4.metadata.txt", main = "BD1_7 clade", 
    abund = 0.0, taxa = "^11259_", legend = "bottom", name="short", position="stack")
 ```
  ![alt text](https://github.com/genomewalker/medNS/blob/master/plot_examples/BD1_7_clade.png)
