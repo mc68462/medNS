@@ -34,8 +34,8 @@ mean.abu[is.na(mean.abu)] <- 0
 
 b<-as.data.frame(cbind(site.otu.prev[mean.abu > minabu], mean.abu[mean.abu > minabu]))
 colnames(b)<-c("counts", "mean")
-b$com[b$counts >= 0.75 & b$mean >= minabu]<-"Generalist"
-b$com[b$counts <= 0.1  & b$mean >= minabu]<-"Specialist"
+b$com[b$counts >= 0.75 & b$mean >= minabu]<-"Broad"
+b$com[b$counts <= 0.1  & b$mean >= minabu]<-"Narrow"
 b$com[is.na(b$com)]<-"NA"
 
 base_breaks <- function(n = 10){
