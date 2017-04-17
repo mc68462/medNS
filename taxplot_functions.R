@@ -128,7 +128,7 @@ taxplot_subnets <- function(otu_matrix, sample_data, taxa, Year, main, n, abund,
     theme(strip.text.x = element_text(size=10)) +
     scale_fill_manual(labels=target_oligotypes, values=rainbow(colourCount))  +   
     xlab("Julian Day") +
-    ylab("Frequency") +
+    ylab("Relative abundance (%)") +
     theme(panel.grid.minor=element_blank()) +     
     theme(panel.grid.major=element_blank()) +     
     theme(panel.border=element_rect(color="black", size=0.2))  + 
