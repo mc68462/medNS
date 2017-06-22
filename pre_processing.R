@@ -125,26 +125,3 @@ cogito_physeq_2012_prevalence_filt <- cogito_physeq_2012_prevalence %>%
   filter(prev >= cogito_physeq_2012_n_samples * 0.1)
 summary(cogito_physeq_2012_prevalence_filt$prev)
 cogito_physeq_2012_otu_sample_physeq_filt_prev <- prune_taxa(cogito_physeq_2012_prevalence_filt %>% .$otu_name %>% as.vector %>% as.character, cogito.physeq.2012)
-
-# No transformation - rows are samples
-filt2011=t(as.matrix(as.data.frame(otu_table(cogito_physeq_2011_otu_sample_physeq_filt_prev))))
-filt2012=t(as.matrix(as.data.frame(otu_table(cogito_physeq_2012_otu_sample_physeq_filt_prev))))
-
-# No transformation - only sample-wise normaliztiaon - rows (MARGIN=1) are samples
-norm2011=decostand(filt2011, method="total", MARGIN=1)
-norm2012=decostand(filt2012, method="total", MARGIN=1)
-# rowSums should equal 1
-rowSums(norm2011)
-rowSums(norm2012)
-
-# Hellinger transformation of log scaled abundance (+ pseudocount 1) as in Guidi et al. 2016 
-hellog2011 <- decostand(log(filt2011 + 1 ), method="hellinger", MARGIN=1)
-hellog2012 <- decostand(log(filt2012 + 1 ), method="hellinger", MARGIN=1)
-
-# meanSDplot: Standard deviation and mean are calculated row-wise from the expression matrix (in) x. 
-meanSdPlot(t(filt2011), ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(t(norm2011), ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(t(hellog2011), ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(t(filt2011), ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(t(norm2012), ylab = "SD", xlab="Rank(mean)")
-meanSdPlot(t(hellog2012), ylab = "SD", xlab="Rank(mean)")
