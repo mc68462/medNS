@@ -58,5 +58,4 @@ dev.off()
 
 #Return broad & narrow oligotypes
 broad <- rownames(b)[b$counts >= 0.75 & b$mean >= minabu]
-
 narrow <- rownames(b)[b$counts <= 0.1  & b$mean >= minabu]
