@@ -12,44 +12,36 @@ sample metadata: TableS4.metadata.txt
 ```
 - Construct phyloseq object
 - Calculate OTU singletons, doubletons and sample prevalence
-- Filter OTUs < 10% sample prevalence
-- Evaluate transformation of OTU matrix - Hellinger transformation of log scaled abundance (+ pseudocount 1)
+- Save filtered abundance matrices where oligotypes have > 10% sample prevalence
 ```
 
 ##### wgcna.R (Langfelder & Horvath *BMC Bioinformatics* 2008)
 ```
-- Import filtered data from phyloseq object generated in OTU.pre_processing.R
-- Collect basic abundance measures of OTUs (mean, geometric mean, maximum observed abundance)
-- Perform OTU matrix transformation - Hellinger transformation of log scaled abundance (+ pseudocount 1)
-
-- Run WGCNA 
-- identify optimal softPower to achieve a scale free topology (scale free toplogy model fit R squared > 0.8)
-   - run blockwiseConsensusModules
-   - find correlations and consensus correlations of module eigengenes and sample environmental metadata (Figure 5)
-   - identify 'megamodules' accoriding to hierarchical clustering patterns
-   - assign module, megamodule, taxonomic and abundance data to each OTU in a dataframe
-   - plot OTU barblots within each megamodule using taxplot_subnets (Figures 6, 7, S3-S7)
+- Import filtered abundance data from phyloseq object generated in pre_processing.R
+- Import SparCC correlation matrixes
+- Run WGCNA to idenfity consensus modules in SparCC networks
+- Perform redundancy analysis (RDA)
+- Plot oligotype abundance for each consensus module using taxplot_functions.R
+- Filter oligotypes based on patterns graph deconstruction
+- Intersect network graphs
 ```
 
-##### module_preservation.R
+### taxplot_grep
 ```
-- calculate module preservation using Zsummary statistic and medianRank (Figure S9)
-```
-### OTU abundance barplots using taxplot_grep in taxplot_functions.R
-```
-- the taxplot_grep function uses a basic grep search to plot the abundance of OTUs and taxonomic paths of 
-   interest across 2010-2012
+- the taxplot_grep function uses a basic grep search to plot the abundance of oligotypes and taxonomic paths of 
+   interest across 2010-2012 datasets
 
-- source(taxplot_function.R)
+- source(taxplot_functions.R)
   usage: 
    otu_matrix = path to OTU table [TableS4.txt]
    sample_data = path to metadata table [TableS4.metadata.txt]
+   taxa = taxonomic grep search - search feature must match a portion of the taxonomic path as in tax.txt 
    main = title 
    abund = minimum observed abundance in at least 1 sample
-   taxa = taxonomic grep search - search feature must match a portion of the taxonomic path as in tax.txt 
-   legend position = c("left", "right", "none")
-   name = c("short", "long") [short = otuID only, long = otuID + lowest taxnomic level]
    position = c("stack", "fill") [stack = % total abundance, fill = scale abundance to 100%] 
+   name = c("short", "long") [short = otuID only, long = otuID + lowest taxnomic level]
+   legend = c("left", "right", "none")
+   
  ```
 #### Examples - taxa should be formatted according to data/taxonomy.txt for successful grep search
 
