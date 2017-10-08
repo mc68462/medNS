@@ -1,16 +1,12 @@
 library(ggplot2)
-library(plyr)
-library(dplyr)
 library(reshape)
-library(splitstackshape)
+library(dplyr)
 library(phyloseq)
-library(vsn)
 library(cowplot)
-library(vegan)
 
 #COGITO data
 # from 2010-2012 (142 samples)
-cogito.otus<-read.table(file="data/Table_S3.OTU_matrix.txt", sep="\t", header=T, row.names = 1)
+cogito.otus<-read.table(file="data/TableS4.txt", sep="\t", header=T, row.names = 1)
 
 #massage cogito data, split node and taxonomy
 cogito.otus.taxo<-as.data.frame(stringr::str_split_fixed(rownames(cogito.otus), "_", 2))
@@ -26,7 +22,7 @@ colnames(cogito.otus.taxo)<-c("domain",
 cogito.otus.taxo[is.na(cogito.otus.taxo)]<-NA
 
 #read metadata file 
-cogito.sample.metadata<-read.table(file="data/TableS4.sample.metadata.txt" , sep="\t", header=T, row.names=1)
+cogito.sample.metadata<-read.table(file="data/TableS4_metadata.txt" , sep="\t", header=T, row.names=1)
 sample_name=rownames(cogito.sample.metadata)
 cogito.sample.metadata=cbind(sample_name, cogito.sample.metadata)
 # merge all into physeq object
@@ -125,3 +121,6 @@ cogito_physeq_2012_prevalence_filt <- cogito_physeq_2012_prevalence %>%
   filter(prev >= cogito_physeq_2012_n_samples * 0.1)
 summary(cogito_physeq_2012_prevalence_filt$prev)
 cogito_physeq_2012_otu_sample_physeq_filt_prev <- prune_taxa(cogito_physeq_2012_prevalence_filt %>% .$otu_name %>% as.vector %>% as.character, cogito.physeq.2012)
+
+saveRDS(cogito_physeq_2012_otu_sample_physeq_filt_prev, file = "results/filtered.phyloseq.2012.rds")
+saveRDS(cogito_physeq_2011_otu_sample_physeq_filt_prev, file = "results/filtered.phyloseq.2011.rds")
