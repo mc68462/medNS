@@ -26,7 +26,7 @@ sample metadata: TableS4.metadata.txt
 - Intersect network graphs
 ```
 
-### taxplot_grep
+##### taxplot_grep
 ```
 - the taxplot_grep function uses a basic grep search to plot the abundance of oligotypes and taxonomic paths of 
    interest across 2010-2012 datasets
