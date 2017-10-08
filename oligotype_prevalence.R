@@ -1,4 +1,5 @@
 library(ggplot2)
+library(scales)
 
 #import OTU matrix
 df=read.table("data/TableS4.txt", header=TRUE, row.names='nodes', sep='\t')
@@ -44,7 +45,6 @@ base_breaks <- function(n = 10){
   }
 }
 
-pdf("oligotype_prevalence.pdf", height=6, width=7)
 ggplot(data=b) +
   geom_point(aes(counts, mean, colour=com)) +
   xlab("% Sample prevalence") +
@@ -54,7 +54,6 @@ ggplot(data=b) +
   guides(colour=FALSE) +
   theme(legend.position = "bottom") +
   theme_bw()
-dev.off()
 
 #Return broad & narrow oligotypes
 broad <- rownames(b)[b$counts >= 0.75 & b$mean >= minabu]
