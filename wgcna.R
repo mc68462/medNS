@@ -8,7 +8,8 @@ source("taxplot_functions.R")
 
 # set working directory
 workingDir = "."
-setwd(workingDir); 
+setwd(workingDir)
+dir.create("results")
 # Load the WGCNA package
 library(WGCNA)
 # The following setting is important, do not omit.
@@ -20,10 +21,10 @@ filt2012 <- t(as.matrix(as.data.frame(otu_table(readRDS("results/filtered.phylos
 
 # pseudocount + clr transformation for downstream module eigenegene calculation
 filt2011.p <- filt2011 + 1e-6
-clr2011 <- clr(filt2011.p)
+clr2011 <- compositions::clr(filt2011.p)
 
 filt2012.p <- filt2012 + 1e-6
-clr2012 <- clr(filt2012.p)
+clr2012 <- compositions::clr(filt2012.p)
 
 commonOTUs <- intersect(colnames(clr2011), colnames(clr2012))
 clr2011.com <- clr2011[,commonOTUs]
@@ -339,9 +340,6 @@ names(lgrep)<-lmod.df$V1
 # merged modules 0.25
 c1=c("ME5", "ME7", "ME2", "ME1", "ME8", "ME4", "ME3")
 
-# unmerged modules
-#c2=c("ME1", "ME2", "ME3", "ME4", "ME5", "ME6", "ME7", "ME8", "ME9", "ME10", "ME11")
-
 # SELECT one megamodule at a time for plotting - change 'm' and 'mod'- run until dev.off()
 m="c1"
 mod=c1
@@ -354,7 +352,6 @@ p2012=list()
 plotyear="2011"
 p2011=lapply(
   mod,
-  #c("ME1", "ME2"), 
   function(i) taxplot_subnets(otu_matrix="data/TableS4.txt", 
                               sample_data="data/TableS4_metadata.txt", 
                               taxa=lgrep[[i]], n=10, abund=0.0, main=names(lgrep)[which(names(lgrep)==i)], Y=as.numeric(plotyear), legend="right")
@@ -363,12 +360,10 @@ p2011=lapply(
 plotyear="2012"
 p2012=lapply(
   mod,
-  #c("ME1", "ME2"), 
   function(i) taxplot_subnets(otu_matrix="data/TableS4.txt", 
                               sample_data="data/TableS4_metadata.txt", 
                               taxa=lgrep[[i]], n=10, abund=0.0, main=names(lgrep)[which(names(lgrep)==i)], Y=as.numeric(plotyear), legend="right")
 )
-#do.call(grid.arrange, c(p2010, p2011, p2012, nrow=3))
 do.call(grid.arrange, c(p2011, p2012, nrow=2))
 dev.off()
 
@@ -485,10 +480,11 @@ saveRDS(module_graphs_2012, file = "results/unfiltered_2012_module_igraph_list.r
 saveRDS(module_dfs_2012, file = "results/unfiltered_2011_module_edgelist.rds")
 saveRDS(module_dfs_2011, file = "results/unfiltered_2012_module_edgelist.rds")
 
+# generate filtered module networks based on analysis of network graph deconstruction (Figure S12)
 p2011g <- list()
 p2011f <- list()
 for (m1 in 1:length(module_name_list_2011)){
-  test_graph <- module_graphs_2011_unfilt[[m1]]
+  test_graph <- module_graphs_2011[[m1]]
   m.name1 <- test_graph$name
   filt_list <- c(0.51, 0.53, 0.51, 0.61, 0.62, 0.52, 0.5)  # based on analysis of network graph deconstruction
   filt_graph_e <- igraph::delete_edges(test_graph, which(abs(E(test_graph)$weight) < filt_list[m1]))
@@ -507,7 +503,7 @@ for (m1 in 1:length(module_name_list_2011)){
 p2012g <- list()
 p2012f <- list()
 for (m2 in 1:length(module_name_list_2012)){
-  test_graph <- module_graphs_2012_unfilt[[m2]]
+  test_graph <- module_graphs_2012[[m2]]
   m.name2 <- test_graph$name
   filt_list <- c(0.58, 0.55, 0.56, 0.61, 0.57, 0.59, 0.55) # based on analysis of network graph deconstruction
   filt_graph_e <- igraph::delete_edges(test_graph, which(abs(E(test_graph)$weight) < filt_list[m2]))
